@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+
+  crdb:
+    image: cockroachdb/cockroach:latest-v21.2
+    networks:
+      - backend
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+    command: start-single-node --insecure
+    volumes:
+      - "${PWD}/cockroach-data/crdb:/cockroach/cockroach-data"
