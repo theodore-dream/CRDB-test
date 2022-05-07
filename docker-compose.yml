@@ -1,13 +1,36 @@
 version: "3.9"
 services:
 
-  crdb:
+  crdb1:
+    container_name: crdb1
     image: cockroachdb/cockroach:latest-v21.2
     networks:
       - backend
     ports:
       - "26257:26257"
       - "8080:8080"
-    command: start-single-node --insecure
+    command: start --insecure --join=crdb1,crdb2,crdb3
     volumes:
-      - "${PWD}/cockroach-data/crdb:/cockroach/cockroach-data"
+      - "${PWD}/cockroach-data/crdb1:/cockroach/cockroach-data"
+
+  crdb2:
+    container_name: crdb2
+    image: cockroachdb/cockroach:latest-v21.2
+    networks:
+      - backend
+    command: start --insecure --join=crdb1,crdb2,crdb3
+    volumes:
+      - "${PWD}/cockroach-data/crdb2:/cockroach/cockroach-data"
+
+  crdb3:
+    container_name: crdb3
+    image: cockroachdb/cockroach:latest-v21.2
+    networks:
+      - backend
+    command: start --insecure --join=crdb1,crdb2,crdb3
+    volumes:
+      - "${PWD}/cockroach-data/crdb3:/cockroach/cockroach-data"
+
+
+networks:
+  backend:
